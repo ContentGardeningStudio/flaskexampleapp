@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete</title>
+</head>
+<body>
+    <h4>Are you sure ?</h4>
+    <table>
+        <tbody>
+            <tr>
+                <th>Username</th>
+                <td>{{ student.username }}</td>
+            </tr>
+            <tr>
+                <th>Firstname</th>
+                <td>{{ student.firstname }}</td>
+            </tr>
+            <tr>
+                <th>Lastname</th>
+                <td>{{ student.lastname }}</td>
+            </tr>
+            <tr>
+                <th>University</th>
+                <td>{{ student.university }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <form action="" method="post">
+        Click YES to confirm
+        <input type="submit" value="YES">
+        <a href="/">Cancel</a>
+    </form>
+</body>
+</html>
