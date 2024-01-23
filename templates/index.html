@@ -8,25 +8,23 @@
     </head>
     <body>
         <div class="container">
-            <h1>Students list</h1>
+            <h1>Url list</h1>
             <table class="table table-dark table-striped">
                 <thead>
                     <tr>
                         <th>id</th>
-                        <th>username</th>
-                        <th>firstname</th>
-                        <th>lastname</th>
-                        <th>university</th>
+                        <th>url</th>
+                        <th>description</th>
+                        <th>category</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for student in students %}
+                    {% for url in urls %}
                         <tr>
-                            <td>{{ student.id }}</td>
-                            <td>{{ student.username }}</td>
-                            <td>{{ student.firstname }}</td>
-                            <td>{{ student.lastname }}</td>
-                            <td>{{ student.university }}</td>
+                            <td>{{ url.id }}</td>
+                            <td>{{ url.url }}</td>
+                            <td>{{ url.description }}</td>
+                            <td>{{ url.category }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
