@@ -21,6 +21,11 @@ db = SQLAlchemy(app)
 # Base = declarative_base()
 
 
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db.session.remove()
+
+
 class Url(db.Model):
     """Url model"""
 
