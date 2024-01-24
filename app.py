@@ -1,25 +1,10 @@
 from flask import Flask, redirect, render_template, request
 
-# from flask import flash, jsonify,
-
-# from sqlalchemy import create_engine
-# from sqlalchemy import Column, Integer, String
-# from sqlalchemy.orm import sessionmaker
-# from sqlalchemy.ext.declarative import declarative_base
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///demoapp.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
 db = SQLAlchemy(app)
-
-# app = Flask(__name__)
-# engine = create_engine('sqlite:///url.db', echo=False)
-# # create a Session
-# Session = sessionmaker(bind=engine)
-# session = Session()
-#
-# Base = declarative_base()
-
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
@@ -28,8 +13,6 @@ def shutdown_session(exception=None):
 
 class Url(db.Model):
     """Url model"""
-
-    # __tablename__ = "url"
 
     id = db.Column(db.Integer, primary_key=True)
     url = db.Column(db.String)
