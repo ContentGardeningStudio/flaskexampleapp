@@ -21,6 +21,11 @@ db = SQLAlchemy(app)
 # Base = declarative_base()
 
 
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db.session.remove()
+
+
 class Url(db.Model):
     """Url model"""
 
@@ -31,10 +36,10 @@ class Url(db.Model):
     description = db.Column(db.String)
     category = db.Column(db.String(80))
 
-    # def __init__(self, url, description, category):
-    #     self.url = url
-    #     self.description = description
-    #     self.category = category
+    def __init__(self, url, description, category):
+        self.url = url
+        self.description = description
+        self.category = category
 
 
 with app.app_context():
