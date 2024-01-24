@@ -16,6 +16,7 @@
                         <th>url</th>
                         <th>description</th>
                         <th>category</th>
+                        <th>actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -25,10 +26,23 @@
                             <td>{{ url.url }}</td>
                             <td>{{ url.description }}</td>
                             <td>{{ url.category }}</td>
+                            <td>
+                                <div class="btn-group">
+                                    <a href="{{ url_for('update', id=url.id) }}">
+                                        <button class="btn btn-info">Update</button>
+                                    </a>
+                                    <a href="{{ url_for('delete', id=url.id) }}">
+                                        <button class="btn btn-danger">Delete</button>
+                                    </a>
+                                </div>
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
+            <a href="{{ url_for('create') }}">
+                <button class="btn btn-primary">Create</button>
+            </a>
         </div>
     </body>
 </html>
