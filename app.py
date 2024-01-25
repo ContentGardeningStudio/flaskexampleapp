@@ -29,9 +29,6 @@ with app.app_context():
     # Create tables within an application context
     db.create_all()
 
-# # create tables
-# Base.metadata.create_all(engine)
-
 
 @app.route("/")
 def index():
