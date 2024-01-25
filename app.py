@@ -1,7 +1,5 @@
 from flask import Flask, redirect, render_template, request
-
 # from flask import flash, jsonify,
-
 # from sqlalchemy import create_engine
 # from sqlalchemy import Column, Integer, String
 # from sqlalchemy.orm import sessionmaker
@@ -14,7 +12,7 @@ db = SQLAlchemy(app)
 
 # app = Flask(__name__)
 # engine = create_engine('sqlite:///url.db', echo=False)
-# # create a Session
+# create a Session
 # Session = sessionmaker(bind=engine)
 # session = Session()
 #
@@ -26,6 +24,15 @@ def shutdown_session(exception=None):
     db.session.remove()
 
 
+class Category(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    urls = db.relationship('Url', backref=db.backref('category', lazy=True))
+
+    def __init__(self, name):
+        self.name = name
+
+
 class Url(db.Model):
     """Url model"""
 
@@ -34,7 +41,9 @@ class Url(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     url = db.Column(db.String)
     description = db.Column(db.String)
-    category = db.Column(db.String(80))
+    # category = db.Column(db.String(80))
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
+    # category = db.relationship('Category', backref=db.backref('posts', lazy=True))
 
     def __init__(self, url, description, category):
         self.url = url
@@ -42,11 +51,12 @@ class Url(db.Model):
         self.category = category
 
 
+
 with app.app_context():
     # Create tables within an application context
     db.create_all()
 
-# # create tables
+# create tables
 # Base.metadata.create_all(engine)
 
 
@@ -54,6 +64,23 @@ with app.app_context():
 def index():
     urls = db.session.query(Url).all()
     return render_template("index.html", urls=urls)
+
+@app.route("/category")
+def show_all_categories():
+    categories = db.session.query(Category).all()
+    return render_template("categories.html", categories=categories)
+
+
+@app.route("/new_category", methods=["GET", "POST"])
+def add_category():
+    if request.method == "GET":
+        return render_template("create_cat.html")
+    if request.method == "POST":
+        name = request.form["name"]
+        category = Category(name=name)
+        db.session.add(category)
+        db.session.commit()
+        return redirect("/category")
 
 
 @app.route("/new", methods=["GET", "POST"])
@@ -68,6 +95,12 @@ def create():
         db.session.add(url)
         db.session.commit()
         return redirect("/")
+
+
+@app.route("/category/<int:id>")
+def show_one_category(id):
+    category = db.session.get(Category, id)
+    return render_template("show_cat.html", category=category)
 
 
 @app.route("/<int:id>")
