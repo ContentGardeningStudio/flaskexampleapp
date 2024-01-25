@@ -1,10 +1,12 @@
+import click
 from flask import Flask, redirect, render_template, request
-
+from flask.cli import with_appcontext
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
 db = SQLAlchemy(app)
+
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
@@ -25,9 +27,18 @@ class Url(db.Model):
         self.category = category
 
 
-with app.app_context():
-    # Create tables within an application context
+# with app.app_context():
+#     # Create tables within an application context
+#     db.create_all()
+
+
+@app.cli.command("init-db")
+@with_appcontext
+def init_db_command():
+    """Clear existing data and create new tables."""
+    db.drop_all()
     db.create_all()
+    print("Initialized the database.")
 
 
 @app.route("/")
