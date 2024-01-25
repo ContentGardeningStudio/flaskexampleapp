@@ -1,13 +1,15 @@
+import click
 from flask import Flask, redirect, render_template, request
 # from flask import flash, jsonify,
 # from sqlalchemy import create_engine
 # from sqlalchemy import Column, Integer, String
 # from sqlalchemy.orm import sessionmaker
 # from sqlalchemy.ext.declarative import declarative_base
+from flask.cli import with_appcontext
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///demoapp.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
 db = SQLAlchemy(app)
 
 # app = Flask(__name__)
@@ -36,8 +38,6 @@ class Category(db.Model):
 class Url(db.Model):
     """Url model"""
 
-    # __tablename__ = "url"
-
     id = db.Column(db.Integer, primary_key=True)
     url = db.Column(db.String)
     description = db.Column(db.String)
@@ -58,6 +58,18 @@ with app.app_context():
 
 # create tables
 # Base.metadata.create_all(engine)
+# with app.app_context():
+#     # Create tables within an application context
+#     db.create_all()
+
+
+@app.cli.command("init-db")
+@with_appcontext
+def init_db_command():
+    """Clear existing data and create new tables."""
+    db.drop_all()
+    db.create_all()
+    print("Initialized the database.")
 
 
 @app.route("/")
