@@ -2,12 +2,10 @@ from flask import Flask, redirect, render_template, request, url_for, flash
 import sqlalchemy
 from flask.cli import with_appcontext
 from flask_sqlalchemy import SQLAlchemy
-from flask_wtf import FlaskForm
 from werkzeug.security import generate_password_hash, check_password_hash
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import DataRequired, Email, EqualTo
 from flask_login import LoginManager, UserMixin, current_user, login_user, logout_user, login_required
 from urllib.parse import urlsplit
+import sqlalchemy.orm as so
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
@@ -27,23 +25,7 @@ def shutdown_session(exception=None):
 def load_user(id):
     return db.session.get(User, id)
 
-#######################################################
-class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    remember_me = BooleanField('Remember Me')
-    submit = SubmitField('Sign In')
 
-########################################################
-class RegistrationForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
-    submit = SubmitField('Register')
-
-
-################################################
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, unique=True, nullable=False)
@@ -120,10 +102,9 @@ def register():
         return render_template("register.html")
 
     if request.method == "POST":
-        form = RegistrationForm(request.form)
-        email = form.email.data
-        username = form.username.data
-        password = form.password.data
+        username = request.form.get('username')
+        password = request.form.get('password')
+        email = request.form.get('email')
 
         # if this returns a user, then the email already exists in database
         user = User.query.filter_by(email=email, username=username).first()
@@ -149,10 +130,9 @@ def login():
         return render_template("login.html")
 
     if request.method == "POST":
-        form = LoginForm(request.form)
-        username = form.username.data
-        password = form.password.data
-        remember = True if form.remember_me.data else False
+        username = request.form.get('username')
+        password = request.form.get('password')
+        remember = True if request.form.get('remember') else False
 
         user = User.query.filter_by(username=username).first()
 
