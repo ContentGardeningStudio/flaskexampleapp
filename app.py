@@ -1,4 +1,4 @@
-from flask import Flask, redirect, render_template, request, url_for, flash
+from flask import Flask, redirect, render_template, request, url_for, flash, Blueprint
 import sqlalchemy
 from flask.cli import with_appcontext
 from flask_sqlalchemy import SQLAlchemy
@@ -96,7 +96,8 @@ def init_db_command():
     print("Initialized the database.")
 
 
-@app.route('/register', methods=["GET", "POST"])
+auth = Blueprint('auth', __name__)
+@auth.route('/register', methods=["GET", "POST"])
 def register():
     if request.method == "GET":
         return render_template("register.html")
@@ -124,7 +125,7 @@ def register():
         return redirect(url_for('login'))
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == "GET":
         return render_template("login.html")
@@ -148,36 +149,36 @@ def login():
         return redirect(url_for('home'))
 
 
-@app.route('/logout')
+@auth.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('login'))
 
 
-@app.route('/')
+@auth.route('/')
 @login_required
 def home():
     return render_template("profile.html", current_user=current_user)
 
-
-@app.route("/url")
+main = Blueprint('main', __name__)
+@main.route("/url")
 def show_all_url():
     urls = db.session.query(Url).all()
     return render_template("url.html", urls=urls)
 
 
-@app.route("/users")
+@main.route("/users")
 def show_all_users():
     users = db.session.query(User).all()
     return render_template("users.html", users=users)
 
-@app.route("/category")
+@main.route("/category")
 def show_all_categories():
     categories = db.session.query(Category).all()
     return render_template("categories.html", categories=categories)
 
 
-@app.route("/new_category", methods=["GET", "POST"])
+@main.route("/new_category", methods=["GET", "POST"])
 def add_category():
     if request.method == "GET":
         return render_template("create_cat.html")
@@ -189,7 +190,7 @@ def add_category():
         return redirect("/category")
 
 
-@app.route("/new_user", methods=["GET", "POST"])
+@main.route("/new_user", methods=["GET", "POST"])
 def add_user():
     if request.method == "GET":
         return render_template("create_user.html")
@@ -203,7 +204,7 @@ def add_user():
         return redirect("/users")
 
 
-@app.route("/new_url", methods=["GET", "POST"])
+@main.route("/new_url", methods=["GET", "POST"])
 def create():
     categories = db.session.query(Category).all()
     if request.method == "GET":
@@ -220,19 +221,19 @@ def create():
         return redirect("/")
 
 
-@app.route("/category/<int:id>")
+@main.route("/category/<int:id>")
 def show_one_category(id):
     category = db.session.get(Category, id)
     return render_template("show_cat.html", category=category)
 
 
-@app.route("/url/<int:id>")
+@main.route("/url/<int:id>")
 def show(id):
     url = db.session.get(Url, id)
     return render_template("show_url.html", url=url)
 
 
-@app.route("/url/update/<int:id>", methods=["GET", "POST"])
+@main.route("/url/update/<int:id>", methods=["GET", "POST"])
 def update(id):
     url = db.session.get(Url, id)
     if request.method == "POST":
@@ -253,7 +254,7 @@ def update(id):
     return render_template("update_url.html", url=url)
 
 
-@app.route("/url/delete/<int:id>", methods=["GET", "POST"])
+@main.route("/url/delete/<int:id>", methods=["GET", "POST"])
 def delete(id):
     url = db.session.get(Url, id)
     if request.method == "POST":
