@@ -25,7 +25,7 @@ def shutdown_session(exception=None):
 
 @login.user_loader
 def load_user(id):
-    return db.session.get(User, int(id))
+    return db.session.get(User, id)
 
 #######################################################
 class LoginForm(FlaskForm):
@@ -42,17 +42,6 @@ class RegistrationForm(FlaskForm):
     password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Register')
 
-    # def validate_username(self, username):
-    #     user = db.session.scalar(sqlalchemy.select(User).where(
-    #         User.username == username.data))
-    #     if user is not None:
-    #         raise ValidationError('Please use a different username.')
-    #
-    # def validate_email(self, email):
-    #     user = db.session.scalar(sqlalchemy.select(User).where(
-    #         User.email == email.data))
-    #     if user is not None:
-    #         raise ValidationError('Please use a different email address.')
 
 ################################################
 class User(UserMixin, db.Model):
@@ -60,6 +49,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String, unique=True, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
     password_hash = db.Column(db.String, nullable=False)
+    # authenticated = db.Column(db.Boolean, default=False)
 
     def __init__(self, username, password, email):
         self.username = username
@@ -162,29 +152,29 @@ def login():
         form = LoginForm(request.form)
         username = form.username.data
         password = form.password.data
+        remember = True if form.remember_me.data else False
 
         user = User.query.filter_by(username=username).first()
 
         # check if the user actually exists
         # take the user-supplied password, hash it, and compare it to the hashed password in the database
-        if not user or not check_password_hash(user.password, password):
-            # user ALWAYS None
+        if not user or not check_password_hash(user.password_hash, password):
             flash('Please check your login details and try again.')
             # if the user doesn't exist or password is wrong, reload the page
             return redirect(url_for('login'))
-        else:
-            # if the above check passes, then we know the user has the right credentials
-            login_user(user)
-            return redirect(url_for('home'))
+
+        # if the above check passes, then we know the user has the right credentials
+        login_user(user, remember=remember)
+        return redirect(url_for('home'))
 
 
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('login'))
 
 
-@app.route('/profile')
+@app.route('/')
 @login_required
 def home():
     return render_template("profile.html", current_user=current_user)
