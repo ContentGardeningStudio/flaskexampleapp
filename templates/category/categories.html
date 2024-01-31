@@ -24,10 +24,10 @@
                             <td>{{ cat.name }}</td>
                             <td>
                                 <div class="btn-group">
-                                    <a href="{{ url_for('update', id=cat.id) }}">
+                                    <a href="{{ url_for('main.update_category', id=cat.id) }}">
                                         <button class="btn btn-info">Update</button>
                                     </a>
-                                    <a href="{{ url_for('delete', id=cat.id) }}">
+                                    <a href="{{ url_for('main.delete_category', id=cat.id) }}">
                                         <button class="btn btn-danger">Delete</button>
                                     </a>
                                 </div>
@@ -36,7 +36,9 @@
                     {% endfor %}
                 </tbody>
             </table>
-
+            <a href="{{ url_for('main.add_category') }}">
+                <button class="btn btn-primary">Create</button>
+            </a>
         </div>
 </body>
 </html>

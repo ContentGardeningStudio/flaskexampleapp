@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flask Website</title>
+</head>
+<body>
+    <h1>Are you sure ?</h1>
+    <table>
+        <tbody>
+            <tr>
+                <th>Url</th>
+                <td>{{ url.url }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ url.description }}</td>
+            </tr>
+            <tr>
+                <th>Category</th>
+                <td>{{ url.category.name }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <form action="" method="post">
+        Click YES to confirm
+        <input type="submit" value="YES">
+        <a href="{{ url_for("main.show_all_categories") }}">Cancel</a>
+    </form>
+</body>
+</html>

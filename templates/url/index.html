@@ -28,10 +28,10 @@
                             <td>{{ url.category.name }}</td>
                             <td>
                                 <div class="btn-group">
-                                    <a href="{{ url_for('update', id=url.id) }}">
+                                    <a href="{{ url_for('main.update', id=url.id) }}">
                                         <button class="btn btn-info">Update</button>
                                     </a>
-                                    <a href="{{ url_for('delete', id=url.id) }}">
+                                    <a href="{{ url_for('main.delete', id=url.id) }}">
                                         <button class="btn btn-danger">Delete</button>
                                     </a>
                                 </div>
@@ -40,7 +40,7 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <a href="{{ url_for('create') }}">
+            <a href="{{ url_for('main.create') }}">
                 <button class="btn btn-primary">Create</button>
             </a>
         </div>

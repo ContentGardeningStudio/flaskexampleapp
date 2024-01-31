@@ -2,30 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Delete</title>
+    <title>Flask Website</title>
 </head>
 <body>
     <h1>Are you sure ?</h1>
     <table>
         <tbody>
             <tr>
-                <th>Url</th>
-                <td>{{ url.url }}</td>
+                <th>Id</th>
+                <td>{{ category.id }}</td>
             </tr>
             <tr>
-                <th>Description</th>
-                <td>{{ url.description }}</td>
-            </tr>
-            <tr>
-                <th>Category</th>
-                <td>{{ url.category }}</td>
+                <th>Name</th>
+                <td>{{ category.name }}</td>
             </tr>
         </tbody>
     </table>
     <form action="" method="post">
         Click YES to confirm
         <input type="submit" value="YES">
-        <a href="/">Cancel</a>
+        <a href="{{ url_for('main.show_all_categories') }}">Cancel</a>
     </form>
 </body>
 </html>
