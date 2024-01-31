@@ -25,7 +25,7 @@
                             <td>{{ url.id }}</td>
                             <td>{{ url.url }}</td>
                             <td>{{ url.description }}</td>
-                            <td>{{ url.category }}</td>
+                            <td>{{ url.category.name }}</td>
                             <td>
                                 <div class="btn-group">
                                     <a href="{{ url_for('update', id=url.id) }}">
