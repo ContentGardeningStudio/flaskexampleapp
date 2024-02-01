@@ -17,10 +17,10 @@ from .models import User
 auth = Blueprint("auth", __name__)
 
 
-@auth.route("/register", methods=["GET", "POST"])
-def register():
+@auth.route("/signup", methods=["GET", "POST"])
+def signup():
     if request.method == "GET":
-        return render_template("auth/register.html")
+        return render_template("auth/signup.html")
 
     if request.method == "POST":
         username = request.form.get("username")
@@ -33,7 +33,7 @@ def register():
         # if a user is found, we want to redirect back to signup page so user can try again
         if user:
             flash("Please choose another email or username")
-            return redirect(url_for("register"))
+            return redirect(url_for("auth.signup"))
 
         # create a new user with the form data. Hash the password so the plaintext version isn't saved.
         new_user = User(
@@ -68,7 +68,7 @@ def login():
 
         # if the above check passes, then we know the user has the right credentials
         login_user(user, remember=remember)
-        return redirect(url_for("auth.home"))
+        return redirect(url_for("main.profile"))
         # next_page = request.args.get('next')
         # if not next_page or urlsplit(next_page).netloc != '':
         #     next_page = url_for('auth.home')
@@ -79,9 +79,3 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for("auth.login"))
-
-
-@auth.route('/home')
-def home():
-    # print(current_user.username)
-    return render_template("auth/profile.html", current_user=current_user)

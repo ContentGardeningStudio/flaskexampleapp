@@ -7,8 +7,16 @@ from .models import Category, Url
 #     db.session.remove()
 
 
-# template_folder pr qu'il le localise -> metrre dossier correspondant
 main = Blueprint("main", __name__)
+
+@main.route('/')
+def index():
+    return render_template('index.html')
+
+
+@main.route('/profile')
+def profile():
+    return render_template('auth/profile.html')
 
 
 @main.route("/url")
@@ -38,7 +46,7 @@ def add_category():
         category = Category(name=name)
         db.session.add(category)
         db.session.commit()
-        return redirect(url_for('main.show_all_category'))
+        return redirect(url_for('main.show_all_categories'))
 
 
 # @main.route("/new_user", methods=["GET", "POST"])
