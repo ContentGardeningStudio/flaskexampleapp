@@ -14,11 +14,6 @@ from . import db
 from .models import User
 
 
-# @login.user_loader
-# def load_user(id):
-#     return db.session.get(User, id)
-
-
 auth = Blueprint("auth", __name__)
 
 
@@ -49,7 +44,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        return redirect(url_for("login"))
+        return redirect(url_for("auth.login"))
 
 
 @auth.route("/login", methods=["GET", "POST"])
@@ -69,20 +64,24 @@ def login():
         if not user or not check_password_hash(user.password_hash, password):
             flash("Please check your login details and try again.")
             # if the user doesn't exist or password is wrong, reload the page
-            return redirect(url_for("login"))
+            return redirect(url_for("auth.login"))
 
         # if the above check passes, then we know the user has the right credentials
         login_user(user, remember=remember)
-        return redirect(url_for("home"))
+        return redirect(url_for("auth.home"))
+        # next_page = request.args.get('next')
+        # if not next_page or urlsplit(next_page).netloc != '':
+        #     next_page = url_for('auth.home')
+        # return redirect(next_page)
 
 
 @auth.route("/logout")
 def logout():
     logout_user()
-    return redirect(url_for("login"))
+    return redirect(url_for("auth.login"))
 
 
-# @auth.route('/')
-# @login_required
-# def home():
-#     return render_template("profile.html", current_user=current_user)
+@auth.route('/home')
+def home():
+    # print(current_user.username)
+    return render_template("auth/profile.html", current_user=current_user)
