@@ -1,13 +1,6 @@
-from urllib.parse import urlsplit
-
-import sqlalchemy
-import sqlalchemy.orm as so
-from flask import (Blueprint, Flask, flash, redirect, render_template, request,
+from flask import (Blueprint, flash, redirect, render_template, request,
                    url_for)
-from flask.cli import with_appcontext
-from flask_login import (LoginManager, UserMixin, current_user, login_required,
-                         login_user, logout_user)
-from flask_sqlalchemy import SQLAlchemy
+from flask_login import (current_user, login_user, logout_user)
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from . import db
@@ -68,11 +61,7 @@ def login():
 
         # if the above check passes, then we know the user has the right credentials
         login_user(user, remember=remember)
-        return redirect(url_for("main.profile"))
-        # next_page = request.args.get('next')
-        # if not next_page or urlsplit(next_page).netloc != '':
-        #     next_page = url_for('auth.home')
-        # return redirect(next_page)
+        return render_template("auth/profile.html", current_user=current_user)
 
 
 @auth.route("/logout")

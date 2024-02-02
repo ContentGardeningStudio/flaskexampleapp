@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Flask Website</title>
-</head>
-<body>
-    <h1>Are you sure ?</h1>
-    <table>
+{% extends "base.html" %}
+
+{% block content %}
+    <h1 class="title">Are you sure ?</h1>
+    <table class="table is-fullwidth">
         <tbody>
             <tr>
                 <th>Url</th>
@@ -22,10 +18,11 @@
             </tr>
         </tbody>
     </table>
-    <form action="" method="post">
+    <form action="{{ url_for('main.delete', id = url.id) }}" method="post">
         Click YES to confirm
-        <input type="submit" value="YES">
-        <a href="{{ url_for("main.show_all_categories") }}">Cancel</a>
+        <button type="submit" class="button is-small">YES</button>
     </form>
-</body>
-</html>
+    <a href="{{ url_for('main.show_all_url') }}">
+        <button class="button is-dark is-small">Cancel</button>
+    </a>
+{% endblock %}

@@ -1,4 +1,5 @@
 from flask import Blueprint, redirect, render_template, request, url_for
+from flask_login import login_required
 from . import db
 from .models import Category, Url
 
@@ -15,6 +16,7 @@ def index():
 
 
 @main.route('/profile')
+@login_required
 def profile():
     return render_template('auth/profile.html')
 
@@ -115,7 +117,7 @@ def update(id):
             db.session.commit()
             return redirect(url_for('main.show_all_url'))
         else:
-            return f"Url with id = {id} Does not exist"
+            return f"Url with id {id} Does not exist"
 
     return render_template("url/update.html", url=url, categories=categories)
 
@@ -134,7 +136,7 @@ def update_category(id):
             db.session.commit()
             return redirect(url_for('main.show_all_categories'))
         else:
-            return f"Url with id = {id} Does not exist"
+            return f"Category with id {id} Does not exist"
 
     return render_template("category/update_cat.html", category=category)
 

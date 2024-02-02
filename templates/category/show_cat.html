@@ -1,23 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Flask Website</title>
-</head>
-<body>
-    <div class="container">
-        <table>
-            <tbody>
-                <tr>
-                    <th>ID</th>
-                    <td>{{ category.id }}</td>
-                </tr>
-                <tr>
-                    <th>Name</th>
-                    <td>{{ category.name }}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+    <table class="table is-fullwidth">
+        <tbody>
+            <tr>
+                <th>ID</th>
+                <td>{{ category.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ category.name }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <a href="{{ url_for('main.show_all_categories') }}">
+        <button class="button is-dark">Back</button>
+    </a>
+{% endblock %}
