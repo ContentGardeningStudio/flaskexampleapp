@@ -8,12 +8,13 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String, unique=True, nullable=False)
     email = db.Column(db.String, unique=True, nullable=False)
     password_hash = db.Column(db.String, nullable=False)
-    # authenticated = db.Column(db.Boolean, default=False)
+    age = db.Column(db.Integer, nullable=True)
 
-    def __init__(self, username, password, email):
+    def __init__(self, username, password, email, age):
         self.username = username
         self.email = email
         self.password_hash = password
+        self.age = age
 
     def is_active(self):
         """True, as all users are active."""
@@ -25,7 +26,7 @@ class User(UserMixin, db.Model):
 
     def is_authenticated(self):
         """Return True if the user is authenticated."""
-        return self.authenticated
+        return True
 
     def is_anonymous(self):
         """False, as anonymous users aren't supported."""

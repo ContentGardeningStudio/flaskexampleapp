@@ -19,6 +19,7 @@ def signup():
         username = request.form.get("username")
         password = request.form.get("password")
         email = request.form.get("email")
+        age = request.form.get("age")
 
         # if this returns a user, then the email already exists in database
         user = User.query.filter_by(email=email, username=username).first()
@@ -30,7 +31,7 @@ def signup():
 
         # create a new user with the form data. Hash the password so the plaintext version isn't saved.
         new_user = User(
-            username=username, email=email, password=generate_password_hash(password)
+            username=username, email=email, password=generate_password_hash(password), age=age
         )
 
         # add the new user to the database

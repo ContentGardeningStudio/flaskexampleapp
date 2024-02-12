@@ -1,7 +1,7 @@
 from flask import Blueprint, redirect, render_template, request, url_for
 from flask_login import login_required
 from . import db
-from .models import Category, Url
+from .models import Category, Url, User
 
 # @app.teardown_appcontext
 # def shutdown_session(exception=None):
@@ -30,7 +30,7 @@ def show_all_url():
 # @main.route("/users")
 # def show_all_users():
 #     users = db.session.query(User).all()
-#     return render_template("users.html", users=users)
+#     return render_template("user/users.html", users=users)
 
 
 @main.route("/category")
@@ -54,15 +54,16 @@ def add_category():
 # @main.route("/new_user", methods=["GET", "POST"])
 # def add_user():
 #     if request.method == "GET":
-#         return render_template("create_user.html")
+#         return render_template("user/create_user.html")
 #     if request.method == "POST":
-#         username = request.form["username"]
-#         email = request.form["email"]
-#         password = request.form["password"]
-#         user = User(username=username, password=password, email=email)
+#         username = request.form.get("username")
+#         email = request.form.get("email")
+#         password = request.form.get("password")
+#         age = request.form.get("age")
+#         user = User(username=username, email=email, password=password, age=age)
 #         db.session.add(user)
 #         db.session.commit()
-#         return redirect("/users")
+#         return redirect(url_for("main.show_all_users"))
 
 
 @main.route("/new_url", methods=["GET", "POST"])
