@@ -35,12 +35,12 @@ def create_app():
     def load_user(id):
         return db.session.get(User, id)
 
-    @app.cli.command("init-db")
-    @with_appcontext
-    def init_db_command():
-        """Clear existing data and create new tables."""
-        db.drop_all()
-        db.create_all()
-        print("Initialized the database.")
+    # @app.cli.command("init-reset-db")
+    # @with_appcontext
+    # def init_reset_db_command():
+    #     """Clear existing data and create new tables."""
+    #     db.drop_all()
+    #     db.create_all()
+    #     print("Initialized the database.")
 
     return app
