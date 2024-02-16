@@ -1,19 +1,28 @@
 from flask import Flask
+from .config import DevelopmentConfig, TestingConfig, ProductionConfig
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
 
-from flask.cli import with_appcontext
+# from flask.cli import with_appcontext
 
 # init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()
 migrate = Migrate()
 
-def create_app():
+def create_app(config_name='development'):
     app = Flask(__name__)
 
-    app.config["SECRET_KEY"] = "Jsucdupejmoaedpoqmvnlepas"
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
+    # Load the appropriate configuration
+    # Default to development if an unknown config name is provided
+    app.config.from_object(DevelopmentConfig)
+    if config_name == 'testing':
+        app.config.from_object(TestingConfig)
+    elif config_name == 'production':
+        app.config.from_object(ProductionConfig)
+
+    # app.config["SECRET_KEY"] = "Jsucdupejmoaedpoqmvnlepas"
+    # app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
 
     db.init_app(app)
     migrate.init_app(app, db)
