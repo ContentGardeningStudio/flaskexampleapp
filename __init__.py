@@ -1,7 +1,7 @@
 from flask import Flask
 from .config import DevelopmentConfig, TestingConfig, ProductionConfig
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+# from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_security import SQLAlchemySessionUserDatastore, Security
 
@@ -28,12 +28,13 @@ def create_app(config_name='development'):
     db.init_app(app)
     migrate.init_app(app, db)
 
+    from .models import User, Role
     user_datastore = SQLAlchemySessionUserDatastore(db.session, User, Role)
     security = Security(app, user_datastore)
 
-    login_manager = LoginManager()
-    login_manager.login_view = "auth.login"
-    login_manager.init_app(app)
+    # login_manager = LoginManager()
+    # login_manager.login_view = "auth.login"
+    # login_manager.init_app(app)
 
     # blueprint for auth routes in our app
     from .auth import auth as auth_blueprint
@@ -43,10 +44,10 @@ def create_app(config_name='development'):
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
-    from .models import User
-    @login_manager.user_loader
-    def load_user(id):
-        return db.session.get(User, id)
+    # from .models import User
+    # @login_manager.user_loader
+    # def load_user(id):
+    #     return db.session.get(User, id)
 
     # @app.cli.command("init-reset-db")
     # @with_appcontext
