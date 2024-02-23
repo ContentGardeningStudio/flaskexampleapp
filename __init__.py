@@ -3,6 +3,7 @@ from .config import DevelopmentConfig, TestingConfig, ProductionConfig
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from flask_migrate import Migrate
+from flask_security import SQLAlchemySessionUserDatastore, Security
 
 # from flask.cli import with_appcontext
 
@@ -26,6 +27,9 @@ def create_app(config_name='development'):
 
     db.init_app(app)
     migrate.init_app(app, db)
+
+    user_datastore = SQLAlchemySessionUserDatastore(db.session, User, Role)
+    security = Security(app, user_datastore)
 
     login_manager = LoginManager()
     login_manager.login_view = "auth.login"

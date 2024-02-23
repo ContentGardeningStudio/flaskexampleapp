@@ -1,42 +1,77 @@
-from flask_login import UserMixin
-
+# from flask_login import UserMixin  # replaced by the one from flask_security
+from flask_security import UserMixin, RoleMixin
+from sqlalchemy.orm import relationship, backref
 from . import db
 
 
-class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String, unique=True, nullable=False)
-    email = db.Column(db.String, unique=True, nullable=False)
-    password_hash = db.Column(db.String, nullable=False)
-    age = db.Column(db.Integer, nullable=True)
+# class User(UserMixin, db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     username = db.Column(db.String, unique=True, nullable=False)
+#     email = db.Column(db.String, unique=True, nullable=False)
+#     password_hash = db.Column(db.String, nullable=False)
+#     age = db.Column(db.Integer, nullable=True)
+#
+#     def __init__(self, username, password, email, age):
+#         self.username = username
+#         self.email = email
+#         self.password_hash = password
+#         self.age = age
+#
+#     def is_active(self):
+#         """True, as all users are active."""
+#         return True
+#
+#     def get_id(self):
+#         """Return the email address to satisfy Flask-Login's requirements."""
+#         return self.email
+#
+#     def is_authenticated(self):
+#         """Return True if the user is authenticated."""
+#         return True
+#
+#     def is_anonymous(self):
+#         """False, as anonymous users aren't supported."""
+#         return False
 
-    def __init__(self, username, password, email, age):
-        self.username = username
-        self.email = email
-        self.password_hash = password
-        self.age = age
 
-    def is_active(self):
-        """True, as all users are active."""
-        return True
 
-    def get_id(self):
-        """Return the email address to satisfy Flask-Login's requirements."""
-        return self.email
+class RolesUsers(db.Model):
+    __tablename__ = "roles_users"
+    id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column("user_id", db.Integer(), db.ForeignKey("user.id"))
+    role_id = db.Column("role_id", db.Integer(), db.ForeignKey("role.id"))
 
-    def is_authenticated(self):
-        """Return True if the user is authenticated."""
-        return True
 
-    def is_anonymous(self):
-        """False, as anonymous users aren't supported."""
-        return False
+class Role(db.Model, RoleMixin):
+    __tablename__ = "role"
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(80), unique=True)
+    description = db.Column(db.String(255))
 
+
+class User(db.Model, UserMixin):
+    __tablename__ = "user"
+    id = db.Column(db.Integer(), primary_key=True)
+    email = db.Column(db.String(255), unique=True)
+    username = db.Column(db.String(255), unique=True, nullable=True)
+    password = db.Column(db.String(255), nullable=False)
+    last_login_at = db.Column(db.DateTime())
+    current_login_at = db.Column(db.DateTime())
+    last_login_ip = db.Column(db.String(100))
+    current_login_ip = db.Column(db.String(100))
+    login_count = db.Column(db.Integer)
+    active = db.Column(db.Boolean())
+    # premium = Column(Boolean())
+    fs_uniquifier = db.Column(db.String(255), unique=True, nullable=False)
+    confirmed_at = db.Column(db.DateTime())
+    roles = relationship(
+        "Role", secondary="roles_users", backref=backref("users", lazy="dynamic")
+    )
 
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
-    urls = db.relationship(
+    urls = relationship(
         "Url", backref=db.backref("category", lazy=True)
     )
 
