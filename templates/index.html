@@ -1,13 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1 class="title">
-      Flask App Example
-    </h1>
-    <a href="{{ url_for('main.show_all_url') }}">
-        <button class="button is-black">Url</button>
-    </a>
-    <a href="{{ url_for('main.show_all_categories') }}">
-        <button class="button is-black">Category</button>
-    </a>
+    {% if current_user.is_authenticated %}
+        <h1 class="title">Hello {{ current_user.email }}</h1>
+    {% else %}
+        <h1 class="title">
+            Flask App Example
+        </h1>
+        <a href="{{ url_for('main.show_all_url') }}">
+            <button class="button is-black">Url</button>
+        </a>
+        <a href="{{ url_for('main.show_all_categories') }}">
+            <button class="button is-black">Category</button>
+        </a>
+    {% endif %}
 {% endblock %}

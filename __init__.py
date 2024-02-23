@@ -4,12 +4,15 @@ from flask_sqlalchemy import SQLAlchemy
 # from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_security import SQLAlchemySessionUserDatastore, Security
+from flask_mailman import Mail
 
 # from flask.cli import with_appcontext
 
 # init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()
 migrate = Migrate()
+mail = Mail()
+security = Security()
 
 def create_app(config_name='development'):
     app = Flask(__name__)
@@ -30,7 +33,8 @@ def create_app(config_name='development'):
 
     from .models import User, Role
     user_datastore = SQLAlchemySessionUserDatastore(db.session, User, Role)
-    security = Security(app, user_datastore)
+    security.init_app(app, user_datastore)
+    mail.init_app(app)
 
     # login_manager = LoginManager()
     # login_manager.login_view = "auth.login"
