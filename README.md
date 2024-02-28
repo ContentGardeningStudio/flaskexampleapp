@@ -11,5 +11,5 @@ pip install -r requirements.txt
 Initialize the database:
 
 ```
-flask --app=. db upgrade
+flask --app . db upgrade
 ```
