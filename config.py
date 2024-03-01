@@ -30,8 +30,8 @@ class DevelopmentConfig(Config):
     # mailtrap
     MAIL_SERVER = "sandbox.smtp.mailtrap.io"
     MAIL_PORT = 2525
-    MAIL_USERNAME = "22d11b67bc7943"
-    MAIL_PASSWORD = "07425b916f8383"
+    MAIL_USERNAME = os.getenv("MAIL_USERNAME")
+    MAIL_PASSWORD = os.getenv("MAIL_PASSWORD")
     MAIL_USE_TLS = True
     MAIL_USE_SSL = False
 
